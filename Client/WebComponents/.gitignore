@@ -1,0 +1,54 @@
+# Common IntelliJ Platform excludes
+
+# User specific
+
+utility/.idea/
+
+**/.idea/**/workspace.xml
+**/.idea/**/tasks.xml
+**/.idea/shelf/*
+**/.idea/dictionaries
+**/.idea/httpRequests/
+
+# Sensitive or high-churn files
+**/.idea/**/dataSources/
+**/.idea/**/dataSources.ids
+**/.idea/**/dataSources.xml
+**/.idea/**/dataSources.local.xml
+**/.idea/**/sqlDataSources.xml
+**/.idea/**/dynamic.xml
+
+# Rider
+# Rider auto-generates .iml files, and contentModel.xml
+**/.idea/**/*.iml
+**/.idea/**/contentModel.xml
+**/.idea/**/modules.xml
+
+*.suo
+*.user
+.vs/
+[Bb]in/
+[Oo]bj/
+_UpgradeReport_Files/
+[Pp]ackages/
+
+Thumbs.db
+Desktop.ini
+.DS_Store
+/postman/http-client.private.env.json
+docker/etcd_data
+docker/.esdata
+docker/.apisix/nginx.conf
+/docker/certificate.pem
+/docker/certificate.pfx
+/docker/.apisix/apisix-standalone.yaml
+
+# Ignore all .env files
+*.env
+# Except .encrypted.env files
+!*.encrypted.env
+
+# Ignore all .env files
+*.csv
+# Except .encrypted.env files
+!*.encrypted.csv
