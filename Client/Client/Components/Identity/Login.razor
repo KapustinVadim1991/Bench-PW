@@ -1,0 +1,103 @@
+@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using Client.Identity
+@using Client.Identity.Models
+@inject IAccountManagement Acct
+@inject NavigationManager Navigation
+@layout EmptyLayout
+
+<article class="content">
+    <AuthorizeView>
+        <Authorized>
+            @{
+                Navigation.NavigateTo(ReturnUrl ?? "/");
+            }
+        </Authorized>
+        <NotAuthorized>
+            <section id="presentation-section">
+                <img src="images/logo.png" alt="Logo" class="logo">
+                <h1>Parrot Wings</h1>
+            </section>
+            <section id="form-section">
+                <EditForm Model="Input" method="post" OnValidSubmit="LoginUser"
+                          FormName="login" Context="editform_context">
+                    <DataAnnotationsValidator/>
+
+                    <div class="form-item">
+                        <label for="Input.Email" class="form-item__label">
+                            Email
+                        </label>
+                        <InputText @bind-Value="Input.Email"
+                                   id="Input.Email"
+                                   class="form-item__input"
+                                   autocomplete="username"
+                                   aria-required="true"
+                                   placeholder="name@example.com"/>
+                        <ValidationMessage For="() => Input.Email" class="invalid_validation_message"/>
+                    </div>
+                    <div class="form-item">
+                        <label for="Input.Password" class="form-item__label">
+                            Password
+                        </label>
+                        <InputText type="password"
+                                   @bind-Value="Input.Password"
+                                   id="Input.Password"
+                                   class="form-item__input"
+                                   autocomplete="current-password"
+                                   aria-required="true"
+                                   placeholder="password"/>
+                        <ValidationMessage For="() => Input.Password" class="invalid_validation_message"/>
+                    </div>
+                    <div class="btn-vertical-group">
+                        <button type="submit" class="btn btn-primary">
+                            Log in
+                        </button>
+
+                        <button class="btn btn-secondary">
+                            Registration
+                        </button>
+                    </div>
+
+                    @foreach (var error in _formResult.ErrorList)
+                    {
+                        <div class="alert alert-danger">@error</div>
+                    }
+                </EditForm>
+            </section>
+        </NotAuthorized>
+    </AuthorizeView>
+</article>
+
+
+@code {
+    private FormResult _formResult = new();
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    public async Task LoginUser()
+    {
+        _formResult = await Acct.LoginAsync(Input.Email, Input.Password);
+
+        if (_formResult.Succeeded)
+        {
+            Navigation.NavigateTo(ReturnUrl ?? "/");
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = string.Empty;
+    }
+}

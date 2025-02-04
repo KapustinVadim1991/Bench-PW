@@ -1,6 +1,7 @@
 export function getColor(): string {
-    return '#000000';
+    return getColorAll();
 }
 
-const randomVariable: number = 5;
-export default randomVariable;
+function getColorAll(): string {
+    return '#000001';
+}

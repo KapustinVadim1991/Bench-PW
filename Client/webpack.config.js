@@ -1,8 +1,13 @@
+const glob = require('glob');
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: './Client/Assets/Scripts/Test.ts',
+    entry: [
+        './Client/Assets/Scripts/Test.ts',
+        ...glob.sync('./Client/Assets/Scss/*.scss').map(file => `./${file}`)
+    ],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, './Client/wwwroot/js/dist'),
@@ -11,6 +16,14 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader",
+                ],
+            },
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
@@ -28,4 +41,9 @@ module.exports = {
             },
         ],
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '../../css/style.css',
+        }),
+    ],
 };

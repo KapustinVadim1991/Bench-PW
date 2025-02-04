@@ -11,13 +11,43 @@ var ___MyScripts;
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./Client/Assets/Scss/bootstrap-like.scss":
+/*!************************************************!*\
+  !*** ./Client/Assets/Scss/bootstrap-like.scss ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./Client/Assets/Scss/bootstrap-like.scss?");
+
+/***/ }),
+
+/***/ "./Client/Assets/Scss/form.scss":
+/*!**************************************!*\
+  !*** ./Client/Assets/Scss/form.scss ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./Client/Assets/Scss/form.scss?");
+
+/***/ }),
+
+/***/ "./Client/Assets/Scss/styles.scss":
+/*!****************************************!*\
+  !*** ./Client/Assets/Scss/styles.scss ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./Client/Assets/Scss/styles.scss?");
+
+/***/ }),
+
 /***/ "./Client/Assets/Scripts/Test.ts":
 /*!***************************************!*\
   !*** ./Client/Assets/Scripts/Test.ts ***!
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__),\n/* harmony export */   getColor: () => (/* binding */ getColor),\n/* harmony export */   getColor1: () => (/* binding */ getColor1)\n/* harmony export */ });\nfunction getColor() {\n    return '#000000';\n}\nfunction getColor1() {\n    return '#000001';\n}\nvar randomVariable = 5;\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (randomVariable);\n\n\n//# sourceURL=webpack://___MyScripts/./Client/Assets/Scripts/Test.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   getColor: () => (/* binding */ getColor)\n/* harmony export */ });\nfunction getColor() {\n    return getColorAll();\n}\nfunction getColorAll() {\n    return '#000001';\n}\n\n\n//# sourceURL=webpack://___MyScripts/./Client/Assets/Scripts/Test.ts?");
 
 /***/ })
 
@@ -60,8 +90,11 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	__webpack_modules__["./Client/Assets/Scripts/Test.ts"](0, {}, __webpack_require__);
+/******/ 	__webpack_modules__["./Client/Assets/Scss/styles.scss"](0, {}, __webpack_require__);
+/******/ 	__webpack_modules__["./Client/Assets/Scss/form.scss"](0, {}, __webpack_require__);
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./Client/Assets/Scripts/Test.ts"](0, __webpack_exports__, __webpack_require__);
+/******/ 	__webpack_modules__["./Client/Assets/Scss/bootstrap-like.scss"](0, __webpack_exports__, __webpack_require__);
 /******/ 	___MyScripts = __webpack_exports__;
 /******/ 	
 /******/ })()
