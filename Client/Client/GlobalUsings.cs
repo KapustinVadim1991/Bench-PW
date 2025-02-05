@@ -1,0 +1,1 @@
+global using Color = WebComponents.Enums.Color;

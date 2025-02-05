@@ -9,7 +9,7 @@
 <article class="container flex-center h-100dvh gap-5 col-sm">
     <LogoSection/>
     <section id="form-section" class="w-100">
-        <EditForm Model="Input" OnValidSubmit="LoginUser">
+        <EditForm @ref="_form" Model="Input" OnValidSubmit="LoginUserAsync">
             <DataAnnotationsValidator/>
 
             <LabeledInput Label="Email"
@@ -33,26 +33,11 @@
             }
 
             <div class="btn-vertical-group mt-1">
-                <Button IsLoading="@IsLoginInProcess"
-                        Disabled="@IsLoginInProcess"
-                        ButtonType="submit"
-                        Text="Log in"/>
+                <Button UseLoader
+                        OnClick="LoginUserAsync"
+                        Text="Log in" />
 
-                @*<button type="submit" class="btn btn-primary" disabled="@IsLoginInProcess">
-
-                    @if (IsLoginInProcess)
-                    {
-                        <div class="loader"></div>
-                    }
-                    else
-                    {
-                        <p>Log in</p>
-                    }
-                </button>*@
-
-                <button class="btn btn-secondary" @onclick="NavigateToRegistration" disabled="@IsLoginInProcess">
-                    Registration
-                </button>
+                <Button OnClick="NavigateToRegistration" Color="Color.Secondary" Text="Registration"/>
             </div>
         </EditForm>
     </section>
@@ -60,21 +45,21 @@
 
 
 @code {
+    private EditForm _form = null!;
     private FormResult _formResult = new();
     private InputModel Input { get; set; } = new();
 
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
-    private bool IsLoginInProcess { get; set; }
 
-    public async Task LoginUser()
+    public async Task LoginUserAsync()
     {
-        IsLoginInProcess = true;
-        StateHasChanged();
+        if (_form.EditContext?.Validate() != true)
+        {
+            return;
+        }
 
-        await Task.Delay(3000);
+        await Task.Delay(1000); // just to show the loader on the button
         _formResult = await Acct.LoginAsync(Input.Email, Input.Password);
-
-        IsLoginInProcess = false;
 
         if (_formResult.Succeeded)
         {

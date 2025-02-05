@@ -44,11 +44,12 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
     /// <summary>
     /// Register a new user.
     /// </summary>
+    /// <param name="name">The user's name.</param>
     /// <param name="email">The user's email address.</param>
     /// <param name="password">The user's password.</param>
     /// <returns>The result serialized to a <see cref="FormResult"/>.
     /// </returns>
-    public async Task<FormResult> RegisterAsync(string email, string password)
+    public async Task<FormResult> RegisterAsync(string name, string email, string password)
     {
         string[] defaultDetail = [ "An unknown error prevented registration from succeeding." ];
 
@@ -58,6 +59,7 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
             var result = await _httpClient.PostAsJsonAsync(
                 "register", new
                 {
+                    name,
                     email,
                     password
                 });

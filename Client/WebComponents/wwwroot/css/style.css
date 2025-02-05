@@ -82,7 +82,7 @@
 }
 
 .fz-clamp-lg {
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(1rem, 8vw, 5rem);
 }
 
 .white-space-nowrap {
@@ -191,7 +191,8 @@ a:hover {
 
 .invalid_validation_message {
   color: #ff3a3a;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  line-height: 2rem;
 }
 
 #blazor-error-ui {
@@ -318,7 +319,7 @@ input:focus {
   --text-primary-color: #3c3c3c;
 }
 
-.loading-button .btn-content {
+.btn .btn-content {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -326,16 +327,16 @@ input:focus {
   padding-right: 0;
   transition: padding-right 0.3s ease;
 }
-.loading-button .btn-content.loader-visible {
+.btn .btn-content.loader-visible {
   padding-right: 28px;
 }
-.loading-button .loader {
+.btn .loader {
   position: absolute;
   right: 0;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.loading-button .loader-visible > .loader {
+.btn .loader-visible > .loader {
   opacity: 1;
 }
 
@@ -348,31 +349,6 @@ input:focus {
   animation: l7 1s infinite;
 }
 
-/*.loading-button .btn-loader {
-  opacity: 0;
-  margin-left: 0;
-  width: 0;
-  transition: opacity 0.3s ease, margin-left 0.3s ease, width 0.2s ease;
-}
-
-.loading-button .btn-loader.visible {
-  opacity: 1;
-  width: auto;
-  margin-left: 8px;
-}
-
-.loader {
-  width: 20px;
-  aspect-ratio: 1;
-  --_c: no-repeat radial-gradient(farthest-side, #ffffff 92%, transparent);
-  background:
-          var(--_c) top,
-          var(--_c) left,
-          var(--_c) right,
-          var(--_c) bottom;
-  background-size: 6px 6px;
-  animation: l7 1s infinite;
-}*/
 @keyframes l7 {
   to {
     transform: rotate(0.5turn);

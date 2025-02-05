@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiBackend.Database;
+using WebApiBackend.Identity;
+using WebApiBackend.Identity.Dto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +15,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<PwDbContext>(
     options => options.UseInMemoryDatabase("PwDb"));
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<PwDbContext>();
 
 builder.Services.AddAuthorizationBuilder();
@@ -45,7 +49,7 @@ app.UseCors("wasm");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<AppUser>();
 
 app.UseHttpsRedirection();
 
@@ -65,7 +69,45 @@ app.MapGet("/weatherforecast", (HttpContext httpContext) =>
     .WithOpenApi()
     .RequireAuthorization();
 
-app.MapPost("/logout", async (SignInManager<IdentityUser> signInManager, [FromBody] object? empty) =>
+app.MapPost("/registration", async Task<Results<Ok, ValidationProblem>>
+(
+    [FromBody] RegisterRequestExt registration,
+    HttpContext context,
+    [FromServices] IServiceProvider sp) =>
+{
+    var userManager = sp.GetRequiredService<UserManager<AppUser>>();
+
+    if (!userManager.SupportsUserEmail)
+    {
+        throw new NotSupportedException("Requires a user store with email support.");
+    }
+
+    var userStore = sp.GetRequiredService<IUserStore<AppUser>>();
+    var emailStore = (IUserEmailStore<AppUser>)userStore;
+    var email = registration.Email;
+
+    var emailAddressAttribute = new EmailAddressAttribute();
+    if (string.IsNullOrEmpty(email) || !emailAddressAttribute.IsValid(email))
+    {
+        return TypedResults.ValidationProblem(new Dictionary<string, string[]> {
+            { "Invalid email", ["Email address is not valid."] }
+        });
+    }
+
+    var user = new AppUser();
+    await userStore.SetUserNameAsync(user, registration.Name, CancellationToken.None);
+    await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+    var result = await userManager.CreateAsync(user, registration.Password);
+
+    if (!result.Succeeded)
+    {
+        return result.CreateValidationProblem();
+    }
+
+    return TypedResults.Ok();
+});
+
+app.MapPost("/logout", async (SignInManager<AppUser> signInManager, [FromBody] object? empty) =>
 {
     if (empty is not null)
     {
