@@ -1,3 +1,5 @@
+@import "../Settings/fonts.scss";
+
 * {
     margin: 0;
     padding: 0;
@@ -9,7 +11,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: $font-family-primary;
 }
 
 ul, ol {
@@ -42,12 +44,9 @@ a:hover {
     outline: 1px solid #26b050;
 }
 
-.invalid {
-    outline: 1px solid red;
-}
-
-.validation-message {
-    color: red;
+.invalid_validation_message{
+    color: #ff3a3a;
+    font-size: 0.9rem;
 }
 
 #blazor-error-ui {

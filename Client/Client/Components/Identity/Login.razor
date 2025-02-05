@@ -6,86 +6,85 @@
 @inject NavigationManager Navigation
 @layout EmptyLayout
 
-<article class="content">
-    <AuthorizeView>
-        <Authorized>
-            @{
-                Navigation.NavigateTo(ReturnUrl ?? "/");
+<article class="container flex-center h-100dvh gap-5 col-sm">
+    <LogoSection/>
+    <section id="form-section" class="w-100">
+        <EditForm Model="Input" OnValidSubmit="LoginUser">
+            <DataAnnotationsValidator/>
+
+            <LabeledInput Label="Email"
+                          InputId="Input.Email"
+                          @bind-Value="@Input.Email"
+                          AutoComplete="username"
+                          Placeholder="name@example.com"
+                          For="() => Input.Email"/>
+
+            <LabeledInput Label="Password"
+                          InputId="Input.Password"
+                          InputType="password"
+                          @bind-Value="@Input.Password"
+                          AutoComplete="current-password"
+                          Placeholder="Enter your password"
+                          For="() => Input.Password"/>
+
+            @foreach (var error in _formResult.ErrorList)
+            {
+                <div class="invalid_validation_message">@error</div>
             }
-        </Authorized>
-        <NotAuthorized>
-            <section id="presentation-section">
-                <img src="images/logo.png" alt="Logo" class="logo">
-                <h1>Parrot Wings</h1>
-            </section>
-            <section id="form-section">
-                <EditForm Model="Input" method="post" OnValidSubmit="LoginUser"
-                          FormName="login" Context="editform_context">
-                    <DataAnnotationsValidator/>
 
-                    <div class="form-item">
-                        <label for="Input.Email" class="form-item__label">
-                            Email
-                        </label>
-                        <InputText @bind-Value="Input.Email"
-                                   id="Input.Email"
-                                   class="form-item__input"
-                                   autocomplete="username"
-                                   aria-required="true"
-                                   placeholder="name@example.com"/>
-                        <ValidationMessage For="() => Input.Email" class="invalid_validation_message"/>
-                    </div>
-                    <div class="form-item">
-                        <label for="Input.Password" class="form-item__label">
-                            Password
-                        </label>
-                        <InputText type="password"
-                                   @bind-Value="Input.Password"
-                                   id="Input.Password"
-                                   class="form-item__input"
-                                   autocomplete="current-password"
-                                   aria-required="true"
-                                   placeholder="password"/>
-                        <ValidationMessage For="() => Input.Password" class="invalid_validation_message"/>
-                    </div>
-                    <div class="btn-vertical-group">
-                        <button type="submit" class="btn btn-primary">
-                            Log in
-                        </button>
+            <div class="btn-vertical-group mt-1">
+                <Button IsLoading="@IsLoginInProcess"
+                        Disabled="@IsLoginInProcess"
+                        ButtonType="submit"
+                        Text="Log in"/>
 
-                        <button class="btn btn-secondary">
-                            Registration
-                        </button>
-                    </div>
+                @*<button type="submit" class="btn btn-primary" disabled="@IsLoginInProcess">
 
-                    @foreach (var error in _formResult.ErrorList)
+                    @if (IsLoginInProcess)
                     {
-                        <div class="alert alert-danger">@error</div>
+                        <div class="loader"></div>
                     }
-                </EditForm>
-            </section>
-        </NotAuthorized>
-    </AuthorizeView>
+                    else
+                    {
+                        <p>Log in</p>
+                    }
+                </button>*@
+
+                <button class="btn btn-secondary" @onclick="NavigateToRegistration" disabled="@IsLoginInProcess">
+                    Registration
+                </button>
+            </div>
+        </EditForm>
+    </section>
 </article>
 
 
 @code {
     private FormResult _formResult = new();
-
-    [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+    private bool IsLoginInProcess { get; set; }
 
     public async Task LoginUser()
     {
+        IsLoginInProcess = true;
+        StateHasChanged();
+
+        await Task.Delay(3000);
         _formResult = await Acct.LoginAsync(Input.Email, Input.Password);
+
+        IsLoginInProcess = false;
 
         if (_formResult.Succeeded)
         {
             Navigation.NavigateTo(ReturnUrl ?? "/");
         }
+    }
+
+    private void NavigateToRegistration()
+    {
+        Navigation.NavigateTo("register");
     }
 
     private sealed class InputModel
@@ -100,4 +99,5 @@
         [Display(Name = "Password")]
         public string Password { get; set; } = string.Empty;
     }
+
 }

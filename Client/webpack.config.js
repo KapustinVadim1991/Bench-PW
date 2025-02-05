@@ -5,12 +5,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
     mode: 'development',
     entry: [
-        './Client/Assets/Scripts/Test.ts',
-        ...glob.sync('./Client/Assets/Scss/*.scss').map(file => `./${file}`)
+        './WebComponents/Assets/Scripts/Test.ts',
+        ...glob.sync('./WebComponents/Assets/Scss/**/*.scss').map(file => `./${file}`)
     ],
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, './Client/wwwroot/js/dist'),
+        path: path.resolve(__dirname, './WebComponents/wwwroot/js'),
         library: '___MyScripts',
         libraryTarget: 'var',
     },
@@ -43,7 +43,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: '../../css/style.css',
+            filename: '../../wwwroot/css/style.css',
         }),
     ],
 };

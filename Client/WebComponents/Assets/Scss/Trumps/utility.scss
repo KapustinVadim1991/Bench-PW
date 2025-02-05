@@ -1,0 +1,37 @@
+.d-flex{
+  display: flex;
+}
+
+.gap-5{ gap: 2rem; }
+.gap-4{ gap: 1.5rem; }
+.gap-3{ gap: 1rem; }
+.gap-2{ gap: 0.5rem; }
+.gap-1{ gap: 0.25rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.p-1 { padding: 1rem; }
+.p-2 { padding: 2rem; }
+
+.w-100{  width: 100%; }
+.w-75{  width: 75%; }
+.w-50{  width: 50%; }
+.w-25{  width: 25%; }
+.w-1{  width: 1%; }
+
+.h-100dvh{  height: 100dvh; }
+
+.mw-clamp-2r-18r{
+  max-width: clamp(2rem, 75%, 18rem);
+}
+
+.fz-clamp-lg{
+  font-size: clamp(2.5rem, 6vw, 5rem);
+}
+
+.white-space-nowrap{
+  white-space: nowrap;
+}

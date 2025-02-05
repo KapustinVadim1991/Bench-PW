@@ -1,0 +1,16 @@
+$body-bg: #f1f1f1;
+$primary-btn-color: #8585ea;
+$primary-btn-hover-color: #7474ec;
+$primary-btn-text-color: #ffffff;
+$secondary-btn-color: #dc6d86;
+$secondary-btn-hover-color: #f6567b;
+$secondary-btn-text-color: #ffffff;
+$btn-shadow-on-hover: -2px 2px 4px 2px #c7c7c7;
+$btn-disabled-bg-color: #aeaeae;
+$input-on-focus-outline: #7474ec;
+
+$text-primary-color: #3c3c3c;
+
+:root {
+  --text-primary-color: #{$text-primary-color};
+}

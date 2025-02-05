@@ -1,0 +1,48 @@
+@namespace WebComponents.Components
+@using WebComponents.Utility
+
+<section id="@SectionId" class="@SectionClass">
+    <img src="@LogoUrl" alt="@LogoAlt" class="@LogoClass" />
+    <h1 class="@TitleClass">@Title</h1>
+</section>
+
+@code {
+    private string SectionClass => new CssBuilder("w-100 flex-center col")
+        .AddClass(AdditionalClasses)
+        .Build();
+
+    /// <summary>
+    /// Section identifier (can be changed if a unique id is required).
+    /// </summary>
+    [Parameter] public string SectionId { get; set; } = "presentation-section";
+
+    /// <summary>
+    /// URL of the logo.
+    /// </summary>
+    [Parameter] public string LogoUrl { get; set; } = "_content/WebComponents/images/logo.png";
+
+    /// <summary>
+    /// Alternative text for the logo.
+    /// </summary>
+    [Parameter] public string LogoAlt { get; set; } = "Logo";
+
+    /// <summary>
+    /// Section title.
+    /// </summary>
+    [Parameter] public string Title { get; set; } = "Parrot Wings";
+
+    /// <summary>
+    /// Additional CSS classes for the section.
+    /// </summary>
+    [Parameter] public string AdditionalClasses { get; set; } = "";
+
+    /// <summary>
+    /// CSS class for the logo image.
+    /// </summary>
+    [Parameter] public string LogoClass { get; set; } = "mw-clamp-2r-18r";
+
+    /// <summary>
+    /// CSS class for the title.
+    /// </summary>
+    [Parameter] public string TitleClass { get; set; } = "fz-clamp-lg white-space-nowrap";
+}

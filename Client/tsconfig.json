@@ -7,6 +7,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["Client/Assets/Scripts/**/*.ts"],
+  "include": ["WebComponents/Assets/Scripts/**/*.ts"],
   "exclude": ["node_modules"]
 }

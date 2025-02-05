@@ -1,0 +1,45 @@
+@import "../Settings/colors.scss";
+
+body{
+  background-color: $body-bg;
+}
+
+form{
+  gap: 0.8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+button{
+  display: inline-block;
+  font-weight: 600;
+  outline: 0 transparent;
+  transition: outline 0.1s ease-in-out;
+}
+
+button:focus{
+  outline: 4px solid #ffffffd9;
+}
+
+label{
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  color: $text-primary-color;
+}
+
+h1, h2, h3, h4, h5, h6{
+  color: $text-primary-color;
+}
+
+input{
+  padding: 1rem 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: 0 transparent;
+  transition: outline 0.1s ease-in-out;
+}
+
+input:focus{
+  outline: 2px solid $input-on-focus-outline;
+}

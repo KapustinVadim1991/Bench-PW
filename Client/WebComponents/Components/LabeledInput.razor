@@ -1,0 +1,82 @@
+@namespace WebComponents.Components
+@using System.Linq.Expressions
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="form-item flex-justify-center col @ContainerClass">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label for="@InputId" class="form-item__label @LabelClass">
+            @Label
+        </label>
+    }
+
+    <InputText Value="@Value"
+               ValueChanged="@ValueChanged"
+               ValueExpression="@For"
+               id="@InputId"
+               type="@InputType"
+               class="@InputClass"
+               autocomplete="@AutoComplete"
+               placeholder="@Placeholder"
+               aria-required="@Requred"/>
+    <ValidationMessage For="@For" class="invalid_validation_message" />
+</div>
+
+@code {
+    [Parameter] public bool Requred { get; set; }
+
+    /// <summary>
+    /// Additional CSS classes for the container.
+    /// </summary>
+    [Parameter] public string? ContainerClass { get; set; }
+
+    /// <summary>
+    /// Text for the label.
+    /// </summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>
+    /// Additional CSS classes for the label.
+    /// </summary>
+    [Parameter] public string? LabelClass { get; set; }
+
+    /// <summary>
+    /// Identifier for the input field.
+    /// </summary>
+    [Parameter] public string? InputId { get; set; }
+
+    /// <summary>
+    /// Type of the input field (default is "text"; can be set to "password", etc.).
+    /// </summary>
+    [Parameter] public string InputType { get; set; } = "text";
+
+    /// <summary>
+    /// CSS class for the input field.
+    /// </summary>
+    [Parameter] public string InputClass { get; set; } = "w-100";
+
+    /// <summary>
+    /// Value for the autocomplete attribute.
+    /// </summary>
+    [Parameter] public string AutoComplete { get; set; } = "off";
+
+    /// <summary>
+    /// Placeholder text for the input field.
+    /// </summary>
+    [Parameter] public string? Placeholder { get; set; }
+
+    /// <summary>
+    /// Expression for validation (used by the ValidationMessage component).
+    /// </summary>
+    [Parameter] public Expression<Func<string?>>? For { get; set; }
+
+    /// <summary>
+    /// The value of the input field (supports two-way binding).
+    /// </summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>
+    /// Event callback that is triggered when the value changes.
+    /// </summary>
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+}

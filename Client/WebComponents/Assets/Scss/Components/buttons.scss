@@ -1,0 +1,48 @@
+@import "../Settings/colors.scss";
+
+.btn{
+  border-radius: 0.5rem;
+  padding: 0.7rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in;
+}
+
+.btn:hover{
+  box-shadow: $btn-shadow-on-hover;
+}
+
+.btn-primary{
+  background-color: $primary-btn-color;
+  color: $primary-btn-text-color;
+}
+
+.btn-primary:hover{
+  background-color: $primary-btn-hover-color;
+}
+
+.btn-secondary{
+  background-color: $secondary-btn-color;
+  color: $secondary-btn-text-color;
+}
+
+.btn-secondary:hover{
+  background-color: $secondary-btn-hover-color;
+}
+
+.btn-vertical-group{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 1rem;
+}
+
+.btn:disabled{
+  cursor: default;
+  background-color: $btn-disabled-bg-color;
+  tab-index: -1;
+}
+
+.btn:disabled:hover{
+  box-shadow:none;
+  background-color: $btn-disabled-bg-color;
+}

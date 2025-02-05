@@ -1,0 +1,36 @@
+@import "../Settings/colors.scss";
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem min(3rem, 8%);
+}
+
+.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-justify-center {
+  display: flex;
+  justify-content: center;
+}
+
+
+.col{
+  flex-direction: column;
+}
+
+@media screen and (max-width: 800px) {
+  .col-sm{
+    flex-direction: column;
+  }
+}

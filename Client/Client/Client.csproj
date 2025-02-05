@@ -14,7 +14,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\images\" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\dist\bundle.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebComponents\WebComponents.csproj" />
     </ItemGroup>
 
     <!-- Webpack Build -->
