@@ -2,7 +2,8 @@
 @using System.ComponentModel.DataAnnotations
 @using Client.Identity
 @using Client.Identity.Models
-@inject IAccountManagement Acct
+@inject IAccountManagement AccountManagement
+@inject NavigationManager Navigation
 @layout EmptyLayout
 
 <article class="container flex-center h-100dvh gap-5 col-sm">
@@ -65,14 +66,22 @@
             return;
         }
 
-        _formResult = await Acct.RegisterAsync(Input.Name, Input.Email, Input.Password);
+        _formResult = await AccountManagement.RegisterAsync(Input.Name, Input.Email, Input.Password);
+        if (_formResult.Succeeded)
+        {
+            _formResult = await AccountManagement.LoginAsync(Input.Email, Input.Password);
+            if (_formResult.Succeeded)
+            {
+                Navigation.NavigateTo("/");
+            }
+        }
     }
 
-    private sealed class InputModel
+    public sealed class InputModel
     {
         [Required]
         [RegularExpression(
-            "^(?=.{2,100}$)(?!.*[.,]{2,})(?=.*\\p{L})[\\p{L}\\p{M}.,]+(?: [\\p{L}\\p{M}.,]+)*$\n",
+            "^(?=.{2,100}$)(?!.*[.,]{2,})(?=.*\\p{L})[\\p{L}\\p{M}.,]+(?: [\\p{L}\\p{M}.,]+)*$",
             ErrorMessage = "The provided name is invalid. It must consist solely of letters (from any language), may include single commas or periods (without consecutive punctuation), and spaces. Please ensure the name is between 2 and 100 characters long.")]
         [Display(Name = "Name")]
         public string Name { get; set; } = string.Empty;

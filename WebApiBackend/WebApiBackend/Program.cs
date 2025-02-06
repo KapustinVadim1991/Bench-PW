@@ -53,26 +53,9 @@ app.MapIdentityApi<AppUser>();
 
 app.UseHttpsRedirection();
 
-app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new
-                {
-                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = 0
-                })
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi()
-    .RequireAuthorization();
-
 app.MapPost("/registration", async Task<Results<Ok, ValidationProblem>>
 (
     [FromBody] RegisterRequestExt registration,
-    HttpContext context,
     [FromServices] IServiceProvider sp) =>
 {
     var userManager = sp.GetRequiredService<UserManager<AppUser>>();
@@ -82,21 +65,22 @@ app.MapPost("/registration", async Task<Results<Ok, ValidationProblem>>
         throw new NotSupportedException("Requires a user store with email support.");
     }
 
-    var userStore = sp.GetRequiredService<IUserStore<AppUser>>();
-    var emailStore = (IUserEmailStore<AppUser>)userStore;
-    var email = registration.Email;
-
     var emailAddressAttribute = new EmailAddressAttribute();
-    if (string.IsNullOrEmpty(email) || !emailAddressAttribute.IsValid(email))
+    if (string.IsNullOrEmpty(registration.Email) ||
+        !emailAddressAttribute.IsValid(registration.Email))
     {
         return TypedResults.ValidationProblem(new Dictionary<string, string[]> {
             { "Invalid email", ["Email address is not valid."] }
         });
     }
 
-    var user = new AppUser();
-    await userStore.SetUserNameAsync(user, registration.Name, CancellationToken.None);
-    await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+    var user = new AppUser()
+    {
+        UserName = registration.Email,
+        Email = registration.Email,
+        FullName = registration.Name
+    };
+
     var result = await userManager.CreateAsync(user, registration.Password);
 
     if (!result.Succeeded)
@@ -120,6 +104,6 @@ app.MapPost("/logout", async (SignInManager<AppUser> signInManager, [FromBody] o
 }).RequireAuthorization();
 
 
-app.MapGet("/test", (HttpContext httpContext) => "test response for test request");
+app.MapGet("/test", () => "test response for test request");
 
 app.Run();

@@ -3,12 +3,16 @@
 
 <section id="@SectionId" class="@SectionClass">
     <img src="@LogoUrl" alt="@LogoAlt" class="@LogoClass" />
-    <h1 class="@TitleClass">@Title</h1>
+    <h1 class="@TitleCombinedClass">@Title</h1>
 </section>
 
 @code {
     private string SectionClass => new CssBuilder("w-100 flex-center col")
-        .AddClass(AdditionalClasses)
+        .AddClass(AdditionalClasses!, !string.IsNullOrWhiteSpace(AdditionalClasses))
+        .Build();
+
+    private string TitleCombinedClass => new CssBuilder("white-space-nowrap")
+        .AddClass(TitleClass!, !string.IsNullOrWhiteSpace(TitleClass))
         .Build();
 
     /// <summary>
@@ -34,7 +38,7 @@
     /// <summary>
     /// Additional CSS classes for the section.
     /// </summary>
-    [Parameter] public string AdditionalClasses { get; set; } = "";
+    [Parameter] public string? AdditionalClasses { get; set; }
 
     /// <summary>
     /// CSS class for the logo image.
@@ -44,5 +48,5 @@
     /// <summary>
     /// CSS class for the title.
     /// </summary>
-    [Parameter] public string TitleClass { get; set; } = "fz-clamp-lg white-space-nowrap";
+    [Parameter] public string? TitleClass { get; set; } = "fz-clamp-lg";
 }

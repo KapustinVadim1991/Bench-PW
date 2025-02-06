@@ -57,7 +57,7 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
         {
             // make the request
             var result = await _httpClient.PostAsJsonAsync(
-                "register", new
+                "registration", new
                 {
                     name,
                     email,

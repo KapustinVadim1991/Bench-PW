@@ -53,6 +53,18 @@
   padding: 2rem;
 }
 
+.pt-025 {
+  padding-top: 0.25rem;
+}
+
+.pt-05 {
+  padding-top: 0.25rem;
+}
+
+.pt-1 {
+  padding-top: 1rem;
+}
+
 .w-100 {
   width: 100%;
 }
@@ -192,7 +204,6 @@ a:hover {
 .invalid_validation_message {
   color: #ff3a3a;
   font-size: 0.8rem;
-  line-height: 2rem;
 }
 
 #blazor-error-ui {

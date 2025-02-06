@@ -2,10 +2,10 @@
 @using WebComponents.Utility
 @namespace WebComponents.Components
 
-<button type="@ButtonType" class="@BtnClass" @onclick="OnClickEvent" disabled="@(Disabled || _isOperationInProcess)">
-    <span class="btn-content @LoaderVisibleClass">
-        <span class="btn-text">@Text</span>
-        @if (_isOperationInProcess)
+<button type="@ButtonType" class="@BtnClass" @onclick="OnClickEvent" disabled="@(Disabled || IsLoading)">
+    @Text
+    <span class="loader-placeholder">
+        @if (IsLoading)
         {
             <div class="loader"></div>
         }
@@ -13,19 +13,17 @@
 </button>
 
 @code {
-    private bool _animateLoader;
-    private bool _isOperationInProcess;
-
     private string LoaderVisibleClass => new CssBuilder()
-        .AddClass("loader-visible", _animateLoader)
+        .AddClass("loader-visible", IsLoading)
         .Build();
 
     private string BtnClass => new CssBuilder("btn")
         .AddClass(ColorClass)
+        .AddClass(LoaderVisibleClass, IsLoading)
         .AddClass(Class!, !string.IsNullOrEmpty(Class))
         .Build();
 
-    [Parameter] public bool UseLoader { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public string ButtonType { get; set; } = "button";
     [Parameter] public string? Text { get; set; }
@@ -46,42 +44,11 @@
         _               => "btn-primary"
     };
 
-    protected override void OnParametersSet()
-    {
-        if (!_isOperationInProcess)
-        {
-            _animateLoader = false;
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        // if IsLoading equals true, but animation hasn't started yet,
-        // waiting for one tick until the element appears in the DOM,
-        // set animateLoader flag after that, to add class "visible"
-        if (_isOperationInProcess && !_animateLoader)
-        {
-            await Task.Yield();
-            _animateLoader = true;
-            StateHasChanged();
-        }
-    }
-
     private async Task OnClickEvent(MouseEventArgs args)
     {
         if (!Disabled && OnClick.HasDelegate)
         {
-            if (UseLoader)
-            {
-                _isOperationInProcess = true;
-                StateHasChanged();
-                await OnClick.InvokeAsync();
-                _isOperationInProcess = false;
-            }
-            else
-            {
-                await OnClick.InvokeAsync();
-            }
+            await OnClick.InvokeAsync();
         }
     }
 }

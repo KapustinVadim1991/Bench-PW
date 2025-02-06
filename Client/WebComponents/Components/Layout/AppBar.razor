@@ -1,0 +1,16 @@
+@*@using Microsoft.AspNetCore.Components.Routing
+
+<header class="appbar">
+    <LogoSection/>
+
+    @if(NavLinks)
+    <ul class="nav-menu">
+        <NavLink>Test idea1</NavLink>
+        <NavLink>Test idea1</NavLink>
+    </ul>
+</header>
+
+@code {
+    [Parameter]
+    public RenderFragment? NavLinks { get; set; }
+}*@
