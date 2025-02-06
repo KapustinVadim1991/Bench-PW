@@ -1,14 +1,14 @@
 /*!******************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./WebComponents/Assets/Scss/main.scss ***!
   \******************************************************************************************************************************/
-:root {
-  --text-primary-color: #3c3c3c;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -122,10 +122,6 @@ code {
   color: #c02d76;
 }
 
-:root {
-  --text-primary-color: #3c3c3c;
-}
-
 body {
   background-color: #f1f1f1;
 }
@@ -171,8 +167,21 @@ input:focus {
   outline: 2px solid #7474ec;
 }
 
-:root {
-  --text-primary-color: #3c3c3c;
+header {
+  background-color: #222020;
+  color: #ededed;
+  padding: 10px 0;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+main {
+  margin-top: 50px;
+  width: 100%;
+  height: 100%;
 }
 
 .container {
@@ -203,15 +212,19 @@ input:focus {
   flex-direction: column;
 }
 
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  height: 3rem;
+}
+
 @media screen and (max-width: 800px) {
   .col-sm {
     flex-direction: column;
   }
 }
-:root {
-  --text-primary-color: #3c3c3c;
-}
-
 .btn {
   border-radius: 0.5rem;
   padding: 0.7rem 2rem;
@@ -284,8 +297,61 @@ input:focus {
   background-color: #aeaeae;
 }
 
-:root {
-  --text-primary-color: #3c3c3c;
+.nav-logo{
+  img{
+    width: 4rem;
+  }
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-item {
+  padding: 5px 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #ededed;
+}
+.nav-link:hover {
+  text-decoration: underline;
+  color: rgba(223, 223, 107, 0.7647058824);
+}
+
+.hamburger {
+  cursor: pointer;
+  display: none;
+}
+.hamburger.active .line:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+.hamburger.active .line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active .line:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+.hamburger:hover .line {
+  background-color: rgba(223, 223, 107, 0.767);
+  margin: 6px 0;
+}
+.hamburger:hover.active .line {
+  margin: 5px 0;
+}
+
+.line {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 5px 0;
+  transition: all 0.3s;
 }
 
 .d-flex {
@@ -386,4 +452,27 @@ input:focus {
 
 .white-space-nowrap {
   white-space: nowrap;
+}
+
+.hidden {
+  display: none;
+}
+
+@media screen and (max-width: 800px) {
+  .hamburger {
+    display: block;
+  }
+  .nav-menu {
+    position: fixed;
+    padding: 0;
+    flex-direction: column;
+    right: -100%;
+    top: 50px;
+    background-color: var(--header-background-color);
+    width: 100%;
+    transition: all 0.4s;
+  }
+  .nav-menu.open {
+    right: 0;
+  }
 }

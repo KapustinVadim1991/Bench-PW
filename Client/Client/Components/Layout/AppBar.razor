@@ -1,0 +1,62 @@
+@using WebComponents.Utility
+
+<AuthorizeView>
+    <header>
+        <nav class="navbar">
+            <a href="#" class="nav-logo">
+                <img src="_content/WebComponents/images/logo.png" alt="logo">
+            </a>
+
+            <div class="user-data">
+                <p class="user-data__name">@context.User.Identity?.Name</p>
+                <p class="user-data__balance">500</p>
+            </div>
+
+            <ul class="@NavMenuClass">
+                <li class="nav-item">
+                    <a href="/createTransaction" class="nav-link">New transaction</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/history" class="nav-link">History</a>
+                </li>
+                <li class="@LogoutLinkClass">
+                    <a href="/logout" class="nav-link">Logout</a>
+                </li>
+            </ul>
+
+            <div class="@LogoutBtnClass">
+                <a href="/logout">
+                    <img src="logout.svg" alt="logout">
+                </a>
+            </div>
+
+            <div class="@HamburgerClass" @onclick="ToggleNavMenu">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </nav>
+    </header>
+</AuthorizeView>
+
+@code {
+    private bool _collapseNavMenu;
+
+    private string? LogoutLinkClass => new CssBuilder("nav-item")
+        .AddClass("hidden", !_collapseNavMenu)
+        .Build();
+
+    private string? LogoutBtnClass => new CssBuilder("icon-logout")
+        .AddClass("hidden", _collapseNavMenu)
+        .Build();
+
+    private string? NavMenuClass => new CssBuilder("nav-menu")
+        .AddClass("open", !_collapseNavMenu)
+        .Build();
+
+    private string? HamburgerClass => new CssBuilder("hamburger")
+        .AddClass("active", !_collapseNavMenu)
+        .Build();
+
+    private void ToggleNavMenu() => _collapseNavMenu = !_collapseNavMenu;
+}

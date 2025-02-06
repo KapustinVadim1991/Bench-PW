@@ -3,14 +3,8 @@
 <AuthorizeView>
     <Authorized>
         <div class="page">
-            <div class="sidebar">
-                <NavMenu />
-            </div>
+            <AppBar />
             <main>
-                <div class="app-bar">
-                    Logged in as @context.User.Identity?.Name. <a href="logout"><span class="bi bi-door-closed-fill" aria-hidden="true" style="vertical-align:middle"></span> Logout</a>
-                </div>
-
                 <article class="content">
                     @Body
                 </article>

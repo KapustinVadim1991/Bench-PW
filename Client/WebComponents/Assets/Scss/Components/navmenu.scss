@@ -1,0 +1,66 @@
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-item {
+  padding: 5px 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: $appbar-link-color;
+
+  &:hover {
+    text-decoration: underline;
+    color: $appbar-link-hover-color;
+  }
+}
+
+.hamburger {
+  cursor: pointer;
+  display: none;
+
+  &.active {
+    .line:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    .line:nth-child(2) {
+      opacity: 0;
+    }
+    .line:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+  }
+
+  &:hover {
+    .line {
+      background-color: rgba(223, 223, 107, 0.767);
+      margin: 6px 0;
+    }
+    &.active {
+      .line {
+        margin: 5px 0;
+      }
+    }
+  }
+}
+
+// hamburger
+.line {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 5px 0;
+  transition: all 0.3s;
+}

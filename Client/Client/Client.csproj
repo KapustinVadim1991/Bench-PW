@@ -26,6 +26,10 @@
       <ProjectReference Include="..\WebComponents\WebComponents.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\logout.svg" />
+    </ItemGroup>
+
     <!-- Webpack Build -->
     <Target Name="BuildWebpack" BeforeTargets="Build">
         <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)" />
