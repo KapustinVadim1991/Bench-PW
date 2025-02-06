@@ -5,7 +5,25 @@
   padding: 0.7rem 2rem;
   font-size: 1rem;
   cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   transition: all 0.2s ease-in;
+
+  .loader{
+    opacity: 0;
+    width: 0;
+    margin-left: 0;
+    transition: all 0.2s ease-in;
+  }
+}
+
+.loader-visible{
+  .loader{
+    opacity: 1;
+    margin-left: 0.5rem;
+    @include loader-square;
+  }
 }
 
 .btn:hover{

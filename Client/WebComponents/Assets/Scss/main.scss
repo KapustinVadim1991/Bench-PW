@@ -1,0 +1,24 @@
+// Do not change the order
+
+// SETTINGS
+@import "Settings/colors";
+@import "Settings/fonts";
+
+// TOOLS
+@import "Tools/mixins";
+
+// GENERIC
+@import "Generic/reset";
+
+// ELEMENTS
+@import "Elements/elements";
+
+// OBJECTS
+@import "Objects/objects";
+
+// COMPONENTS
+@import "Components/buttons";
+@import "Components/loaders";
+
+// TRUMPS (утилитарные классы)
+@import "Trumps/utility";

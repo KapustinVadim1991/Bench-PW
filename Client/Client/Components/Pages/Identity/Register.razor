@@ -45,15 +45,16 @@
                 <div class="invalid_validation_message">@error</div>
             }
 
-            <Button UseLoader OnClick="RegisterUserAsync"
+            <Button IsLoading="_registerProcessing" OnClick="RegisterUserAsync"
                     Color="Color.Secondary"
-                    Text="Register"
+                    Text="Register" Type="submit"
                     Class="mt-1 w-100"/>
         </EditForm>
     </section>
 </article>
 
 @code {
+    private bool _registerProcessing;
     private EditForm _form = null!;
     private FormResult _formResult = new();
 
@@ -66,14 +67,26 @@
             return;
         }
 
+        _registerProcessing = true;
+        StateHasChanged();
+
+        await Task.Delay(1000); // to show loader
         _formResult = await AccountManagement.RegisterAsync(Input.Name, Input.Email, Input.Password);
-        if (_formResult.Succeeded)
+
+        try
         {
-            _formResult = await AccountManagement.LoginAsync(Input.Email, Input.Password);
             if (_formResult.Succeeded)
             {
-                Navigation.NavigateTo("/");
+                _formResult = await AccountManagement.LoginAsync(Input.Email, Input.Password);
+                if (_formResult.Succeeded)
+                {
+                    Navigation.NavigateTo("/");
+                }
             }
+        }
+        finally
+        {
+            _registerProcessing = false;
         }
     }
 

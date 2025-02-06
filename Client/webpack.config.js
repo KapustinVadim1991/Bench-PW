@@ -6,7 +6,7 @@ module.exports = {
     mode: 'development',
     entry: [
         './WebComponents/Assets/Scripts/Test.ts',
-        ...glob.sync('./WebComponents/Assets/Scss/**/*.scss').map(file => `./${file}`)
+        './WebComponents/Assets/Scss/main.scss'
     ],
     output: {
         filename: 'bundle.js',

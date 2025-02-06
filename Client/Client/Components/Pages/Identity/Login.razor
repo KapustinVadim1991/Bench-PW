@@ -33,8 +33,9 @@
             }
 
             <div class="btn-vertical-group mt-1">
-                <Button UseLoader
+                <Button IsLoading="_loginProcessing"
                         OnClick="LoginUserAsync"
+                        Type="submit"
                         Text="Log in" />
 
                 <Button OnClick="NavigateToRegistration" Color="Color.Secondary" Text="Registration"/>
@@ -47,6 +48,8 @@
 @code {
     private EditForm _form = null!;
     private FormResult _formResult = new();
+    private bool _loginProcessing;
+
     private InputModel Input { get; set; } = new();
 
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
@@ -58,9 +61,13 @@
             return;
         }
 
+        _loginProcessing = true;
+        StateHasChanged();
+
         await Task.Delay(1000); // just to show the loader on the button
         _formResult = await Acct.LoginAsync(Input.Email, Input.Password);
 
+        _loginProcessing = false;
         if (_formResult.Succeeded)
         {
             Navigation.NavigateTo(ReturnUrl ?? "/");

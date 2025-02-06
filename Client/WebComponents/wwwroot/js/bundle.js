@@ -11,93 +11,13 @@ var ___MyScripts;
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./WebComponents/Assets/Scss/Components/buttons.scss":
-/*!***********************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Components/buttons.scss ***!
-  \***********************************************************/
+/***/ "./WebComponents/Assets/Scss/main.scss":
+/*!*********************************************!*\
+  !*** ./WebComponents/Assets/Scss/main.scss ***!
+  \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Components/buttons.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Components/loaders.scss":
-/*!***********************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Components/loaders.scss ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Components/loaders.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Elements/elements.scss":
-/*!**********************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Elements/elements.scss ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Elements/elements.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Generic/reset.scss":
-/*!******************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Generic/reset.scss ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Generic/reset.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Objects/objects.scss":
-/*!********************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Objects/objects.scss ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Objects/objects.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Settings/colors.scss":
-/*!********************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Settings/colors.scss ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Settings/colors.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Settings/fonts.scss":
-/*!*******************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Settings/fonts.scss ***!
-  \*******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Settings/fonts.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Tools/tools.scss":
-/*!****************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Tools/tools.scss ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Tools/tools.scss?");
-
-/***/ }),
-
-/***/ "./WebComponents/Assets/Scss/Trumps/utility.scss":
-/*!*******************************************************!*\
-  !*** ./WebComponents/Assets/Scss/Trumps/utility.scss ***!
-  \*******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/Trumps/utility.scss?");
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scss/main.scss?");
 
 /***/ }),
 
@@ -151,16 +71,8 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	__webpack_modules__["./WebComponents/Assets/Scripts/Test.ts"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Trumps/utility.scss"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Tools/tools.scss"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Settings/fonts.scss"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Settings/colors.scss"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Objects/objects.scss"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Generic/reset.scss"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Elements/elements.scss"](0, {}, __webpack_require__);
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Components/loaders.scss"](0, {}, __webpack_require__);
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/Components/buttons.scss"](0, __webpack_exports__, __webpack_require__);
+/******/ 	__webpack_modules__["./WebComponents/Assets/Scss/main.scss"](0, __webpack_exports__, __webpack_require__);
 /******/ 	___MyScripts = __webpack_exports__;
 /******/ 	
 /******/ })()

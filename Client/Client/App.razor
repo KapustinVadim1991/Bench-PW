@@ -1,10 +1,25 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using Client.Components.Pages.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
 <PageTitle>PW</PageTitle>
 
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(App).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
+                <NotAuthorized>
+                    @if (routeData.PageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: true).Any())
+                    {
+                        <!-- Allowed anonymous -->
+                        <LayoutView Layout="@typeof(MainLayout)"/>
+                    }
+                    else
+                    {
+                        <RedirectToLogin />
+                    }
+                </NotAuthorized>
+            </AuthorizeRouteView>
             <FocusOnNavigate RouteData="routeData" Selector="input" />
         </Found>
         <NotFound>
