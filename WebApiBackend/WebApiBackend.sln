@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiBackend", "WebApiBackend\WebApiBackend.csproj", "{BA4A7220-DCD8-4674-88EF-C3230847D838}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParrotWings.Models", "..\Shared\ParrotWings.Models\ParrotWings.Models.csproj", "{D260F9EF-9150-49A0-82A2-23784EB2DC86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{BA4A7220-DCD8-4674-88EF-C3230847D838}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA4A7220-DCD8-4674-88EF-C3230847D838}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA4A7220-DCD8-4674-88EF-C3230847D838}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D260F9EF-9150-49A0-82A2-23784EB2DC86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D260F9EF-9150-49A0-82A2-23784EB2DC86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D260F9EF-9150-49A0-82A2-23784EB2DC86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D260F9EF-9150-49A0-82A2-23784EB2DC86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Client.Identity.Models;
 using Microsoft.AspNetCore.Components.Authorization;
+using ParrotWings.Models.Dto.Identity;
 
 namespace Client.Identity;
 
@@ -123,10 +125,12 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
         {
             // login with cookies
             var result = await _httpClient.PostAsJsonAsync(
-                "login?useCookies=true", new
+                "login",new LoginRequestDto
                 {
-                    email,
-                    password
+                    Email = email,
+                    Password = password,
+                    UseCookie = true,
+                    IsPresistCookie = true
                 });
 
             // success?
@@ -177,7 +181,7 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
 
             // user is authenticated,so let's build their authenticated identity
             var userJson = await userResponse.Content.ReadAsStringAsync();
-            var userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, _jsonSerializerOptions);
+            var userInfo = JsonSerializer.Deserialize<object>(userJson, _jsonSerializerOptions);
 
             if (userInfo != null)
             {
@@ -186,6 +190,7 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
                 {
                     new(ClaimTypes.Name, userInfo.Name),
                     new(ClaimTypes.Email, userInfo.Email),
+                    new("balance", userInfo.Balance)
                 };
 
                 // add any additional claims

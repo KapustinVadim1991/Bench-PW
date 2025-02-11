@@ -1,20 +1,29 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using WebApiBackend.Database;
-using WebApiBackend.Identity;
-using WebApiBackend.Identity.Dto;
+using WebApiBackend.Database.Domain;
+using WebApiBackend.Endpoints;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console());
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<PwDbContext>(
-    options => options.UseInMemoryDatabase("PwDb"));
+    options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=parrotwings.db"));
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<PwDbContext>();
 
@@ -49,61 +58,9 @@ app.UseCors("wasm");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapIdentityApi<AppUser>();
+app.MapAuthEndpoints();
+app.MapTransactionEndpoints();
+app.MapUserEndpoints();
 
 app.UseHttpsRedirection();
-
-app.MapPost("/registration", async Task<Results<Ok, ValidationProblem>>
-(
-    [FromBody] RegisterRequestExt registration,
-    [FromServices] IServiceProvider sp) =>
-{
-    var userManager = sp.GetRequiredService<UserManager<AppUser>>();
-
-    if (!userManager.SupportsUserEmail)
-    {
-        throw new NotSupportedException("Requires a user store with email support.");
-    }
-
-    var emailAddressAttribute = new EmailAddressAttribute();
-    if (string.IsNullOrEmpty(registration.Email) ||
-        !emailAddressAttribute.IsValid(registration.Email))
-    {
-        return TypedResults.ValidationProblem(new Dictionary<string, string[]> {
-            { "Invalid email", ["Email address is not valid."] }
-        });
-    }
-
-    var user = new AppUser()
-    {
-        UserName = registration.Email,
-        Email = registration.Email,
-        FullName = registration.Name
-    };
-
-    var result = await userManager.CreateAsync(user, registration.Password);
-
-    if (!result.Succeeded)
-    {
-        return result.CreateValidationProblem();
-    }
-
-    return TypedResults.Ok();
-});
-
-app.MapPost("/logout", async (SignInManager<AppUser> signInManager, [FromBody] object? empty) =>
-{
-    if (empty is not null)
-    {
-        await signInManager.SignOutAsync();
-
-        return Results.Ok();
-    }
-
-    return Results.Unauthorized();
-}).RequireAuthorization();
-
-
-app.MapGet("/test", () => "test response for test request");
-
 app.Run();

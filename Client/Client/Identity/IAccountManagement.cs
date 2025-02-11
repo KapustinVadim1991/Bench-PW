@@ -29,6 +29,7 @@ public interface IAccountManagement
     /// <param name="password">User's password.</param>
     /// <returns>The result of the request serialized to <see cref="FormResult"/>.</returns>
     public Task<FormResult> RegisterAsync(string name, string email, string password);
+    public Task<FormResult> RegisterAsync(string name, string email, string password);
 
     public Task<bool> CheckAuthenticatedAsync();
 }

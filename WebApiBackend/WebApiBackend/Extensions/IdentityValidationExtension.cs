@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 
-namespace WebApiBackend.Identity;
+namespace WebApiBackend.Extensions;
 
 public static class IdentityValidationExtension
 {
