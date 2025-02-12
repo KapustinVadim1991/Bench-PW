@@ -4,3 +4,6 @@ GET {{WebApiBackend_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{WebApiBackend_HostAddress}}/api/auth/login
+Accept: application/json

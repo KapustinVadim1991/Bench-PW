@@ -1,26 +1,24 @@
 @page "/logout"
+@using Client.Services.Interfaces
 @using Client.Identity
-@inject IAccountManagement Acct
+@inject CookieAuthenticationStateProvider AuthenticationStateProvider
+@inject IAuthService AuthService
+@inject NavigationManager NavigateManager
 
 <h1>Logout</h1>
-
-<AuthorizeView @ref="authView">
-    <Authorized>
-        <div class="alert alert-info">Logging you out...</div>
-    </Authorized>
-    <NotAuthorized>
-        <div class="alert alert-success">You're logged out. <a href="/login">Log in.</a></div>
-    </NotAuthorized>
-</AuthorizeView>
+<div class="alert alert-info">Logging you out...</div>
 
 @code {
-    private AuthorizeView? authView;
-
     protected override async Task OnInitializedAsync()
     {
-        if (await Acct.CheckAuthenticatedAsync())
+        if (await AuthenticationStateProvider.CheckAuthenticatedAsync())
         {
-            await Acct.LogoutAsync();
+            var result = await AuthService.LogoutAsync();
+
+            if (result.Succeeded)
+            {
+                NavigateManager.NavigateTo("/login");
+            }
         }
     }
 }

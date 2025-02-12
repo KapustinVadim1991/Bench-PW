@@ -11,4 +11,8 @@ public class AppUser : IdentityUser
 
     [Range(0, double.MaxValue)]
     public decimal Balance { get; set; }
+
+    public ICollection<Transaction> TransactionsSent { get; set; } = new List<Transaction>();
+
+    public ICollection<Transaction> TransactionsReceived { get; set; } = new List<Transaction>();
 }

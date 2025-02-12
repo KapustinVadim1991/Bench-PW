@@ -63,4 +63,11 @@ app.MapTransactionEndpoints();
 app.MapUserEndpoints();
 
 app.UseHttpsRedirection();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PwDbContext>();
+    db.Database.Migrate();
+}
+
 app.Run();

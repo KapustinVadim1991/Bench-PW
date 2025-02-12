@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ParrotWings.Models.Dto.Identity;
 
 /// <summary>

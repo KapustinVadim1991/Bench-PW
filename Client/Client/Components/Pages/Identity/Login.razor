@@ -1,10 +1,9 @@
 @page "/login"
-@using System.ComponentModel.DataAnnotations
-@using Client.Identity
-@using Client.Identity.Models
-@inject IAccountManagement Acct
+@using Client.Services.Interfaces
+@inject IAuthService AuthService
 @inject NavigationManager Navigation
 @layout EmptyLayout
+@inherits AnonymousPage
 
 <article class="container flex-center h-100dvh gap-5 col-sm">
     <LogoSection/>
@@ -43,52 +42,3 @@
         </EditForm>
     </section>
 </article>
-
-
-@code {
-    private EditForm _form = null!;
-    private FormResult _formResult = new();
-    private bool _loginProcessing;
-
-    private InputModel Input { get; set; } = new();
-
-    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
-
-    public async Task LoginUserAsync()
-    {
-        if (_form.EditContext?.Validate() != true)
-        {
-            return;
-        }
-
-        _loginProcessing = true;
-        StateHasChanged();
-
-        await Task.Delay(1000); // just to show the loader on the button
-        _formResult = await Acct.LoginAsync(Input.Email, Input.Password);
-
-        _loginProcessing = false;
-        if (_formResult.Succeeded)
-        {
-            Navigation.NavigateTo(ReturnUrl ?? "/");
-        }
-    }
-
-    private void NavigateToRegistration()
-    {
-        Navigation.NavigateTo("register");
-    }
-
-    private sealed class InputModel
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; } = string.Empty;
-
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; } = string.Empty;
-    }
-}

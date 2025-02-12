@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ParrotWings.Models.Dto.Transactions.CreateTransaction;
+namespace ParrotWings.Models.Dto.Transactions;
 
 /// <summary>
 /// Model for creating a new transaction (transfer).

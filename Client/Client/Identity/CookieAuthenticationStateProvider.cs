@@ -1,11 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Json;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Json;
-using Client.Identity.Models;
+using Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
-using ParrotWings.Models.Dto.Identity;
 
 namespace Client.Identity;
 
@@ -16,8 +12,12 @@ namespace Client.Identity;
 /// Create a new instance of the auth provider.
 /// </remarks>
 /// <param name="httpClientFactory">Factory to retrieve auth client.</param>
-public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILogger<CookieAuthenticationStateProvider> logger)
-    : AuthenticationStateProvider, IAccountManagement
+public class CookieAuthenticationStateProvider(
+    IHttpClientFactory httpClientFactory,
+    ILogger<CookieAuthenticationStateProvider> logger,
+    IAuthService authService
+    )
+    : AuthenticationStateProvider
 {
     /// <summary>
     /// Map the JavaScript-formatted properties to C#-formatted classes.
@@ -36,125 +36,12 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
     /// <summary>
     /// Authentication state.
     /// </summary>
-    private bool _authenticated = false;
+    private bool _authenticated;
 
     /// <summary>
     /// Default principal for anonymous (not authenticated) users.
     /// </summary>
     private readonly ClaimsPrincipal _unauthenticated = new(new ClaimsIdentity());
-
-    /// <summary>
-    /// Register a new user.
-    /// </summary>
-    /// <param name="name">The user's name.</param>
-    /// <param name="email">The user's email address.</param>
-    /// <param name="password">The user's password.</param>
-    /// <returns>The result serialized to a <see cref="FormResult"/>.
-    /// </returns>
-    public async Task<FormResult> RegisterAsync(string name, string email, string password)
-    {
-        string[] defaultDetail = [ "An unknown error prevented registration from succeeding." ];
-
-        try
-        {
-            // make the request
-            var result = await _httpClient.PostAsJsonAsync(
-                "registration", new
-                {
-                    name,
-                    email,
-                    password
-                });
-
-            // successful?
-            if (result.IsSuccessStatusCode)
-            {
-                return new FormResult { Succeeded = true };
-            }
-
-            // body should contain details about why it failed
-            var details = await result.Content.ReadAsStringAsync();
-            var problemDetails = JsonDocument.Parse(details);
-            var errors = new List<string>();
-            var errorList = problemDetails.RootElement.GetProperty("errors");
-
-            foreach (var errorEntry in errorList.EnumerateObject())
-            {
-                if (errorEntry.Value.ValueKind == JsonValueKind.String)
-                {
-                    errors.Add(errorEntry.Value.GetString()!);
-                }
-                else if (errorEntry.Value.ValueKind == JsonValueKind.Array)
-                {
-                    errors.AddRange(
-                        errorEntry.Value.EnumerateArray().Select(
-                                e => e.GetString() ?? string.Empty)
-                            .Where(e => !string.IsNullOrEmpty(e)));
-                }
-            }
-
-            // return the error list
-            return new FormResult
-            {
-                Succeeded = false,
-                ErrorList = problemDetails == null ? defaultDetail : [.. errors]
-            };
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "App error");
-        }
-
-        // unknown error
-        return new FormResult
-        {
-            Succeeded = false,
-            ErrorList = defaultDetail
-        };
-    }
-
-    /// <summary>
-    /// User login.
-    /// </summary>
-    /// <param name="email">The user's email address.</param>
-    /// <param name="password">The user's password.</param>
-    /// <returns>The result of the login request serialized to a <see cref="FormResult"/>.</returns>
-    public async Task<FormResult> LoginAsync(string email, string password)
-    {
-        try
-        {
-            // login with cookies
-            var result = await _httpClient.PostAsJsonAsync(
-                "login",new LoginRequestDto
-                {
-                    Email = email,
-                    Password = password,
-                    UseCookie = true,
-                    IsPresistCookie = true
-                });
-
-            // success?
-            if (result.IsSuccessStatusCode)
-            {
-                // need to refresh auth state
-                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-
-                // success!
-                return new FormResult { Succeeded = true };
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "App error");
-        }
-
-        // unknown error
-        return new FormResult
-        {
-            Succeeded = false,
-            ErrorList = [ "Invalid email and/or password." ]
-        };
-    }
 
     /// <summary>
     /// Get authentication state.
@@ -174,23 +61,23 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
         try
         {
             // the user info endpoint is secured, so if the user isn't logged in this will fail
-            var userResponse = await _httpClient.GetAsync("manage/info");
+            var userResponse = await authService.GetUserInfoAsync();
 
-            // throw if user info wasn't retrieved
-            userResponse.EnsureSuccessStatusCode();
+            if (!userResponse.Succeeded)
+            {
+                logger.LogWarning("User is not authenticated");
+                return new AuthenticationState(user);
+            }
 
             // user is authenticated,so let's build their authenticated identity
-            var userJson = await userResponse.Content.ReadAsStringAsync();
-            var userInfo = JsonSerializer.Deserialize<object>(userJson, _jsonSerializerOptions);
-
-            if (userInfo != null)
+            if (userResponse.Data != null)
             {
+                var userInfo = userResponse.Data;
                 // in this example app, name and email are the same
                 var claims = new List<Claim>
                 {
                     new(ClaimTypes.Name, userInfo.Name),
                     new(ClaimTypes.Email, userInfo.Email),
-                    new("balance", userInfo.Balance)
                 };
 
                 // add any additional claims
@@ -211,13 +98,6 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
 
         // return the state
         return new AuthenticationState(user);
-    }
-
-    public async Task LogoutAsync()
-    {
-        var emptyContent = new StringContent("{}", Encoding.UTF8, "application/json");
-        await _httpClient.PostAsync("logout", emptyContent);
-        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     public async Task<bool> CheckAuthenticatedAsync()

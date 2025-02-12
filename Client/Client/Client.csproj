@@ -10,7 +10,7 @@
         <!-- Включает тримминг при публикации -->
         <PublishTrimmed>true</PublishTrimmed>
         <!-- Устанавливает режим тримминга; 'partial' по умолчанию, 'full' для более агрессивного тримминга -->
-        <TrimMode>full</TrimMode>
+        <TrimMode>partial</TrimMode>
         <!-- Включает анализатор тримминга для предупреждений -->
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     </PropertyGroup>

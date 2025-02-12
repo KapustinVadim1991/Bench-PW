@@ -16,19 +16,15 @@ public class Transaction
     [Required]
     public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
 
-    /// <summary>
-    /// The sender's user ID.
-    /// </summary>
     [Required]
-    [MaxLength(36)]
     public string SenderId { get; set; } = null!;
 
-    /// <summary>
-    /// The recipient's user ID.
-    /// </summary>
+    public AppUser Sender { get; set; } = null!;
+
     [Required]
-    [MaxLength(36)]
     public string RecipientId { get; set; } = null!;
+
+    public AppUser Recipient { get; set; } = null!;
 
     /// <summary>
     /// The amount of the transaction (a positive value).
