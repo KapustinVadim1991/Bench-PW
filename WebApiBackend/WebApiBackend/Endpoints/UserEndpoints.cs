@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -80,29 +81,29 @@ namespace WebApiBackend.Endpoints
             .RequireAuthorization();
 
             // POST /api/user/balance – get user balance.
-            routes.MapPost("/api/user/balance", async Task<Results<Ok<decimal>, UnauthorizedHttpResult>> (
+            routes.MapGet("/api/user/balance", async Task<Results<Ok<decimal>, UnauthorizedHttpResult>> (
                 HttpContext http,
                 UserManager<AppUser> userManager,
                 ILogger<Endpoints> logger) =>
             {
                 logger.LogInformation("POST /api/user/balance called by user: {User}", http.User.Identity?.Name);
 
-                // Retrieve the current user (sender) based on the authentication cookie.
-                var userEmail = http.User.Identity?.Name;
-                if (string.IsNullOrEmpty(userEmail))
+                var email = http.User.FindFirst(ClaimTypes.Email)?.Value;
+                if (http.User.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(email))
                 {
                     logger.LogWarning("User email is null or empty in POST /api/user/balance.");
                     return TypedResults.Unauthorized();
                 }
 
-                var user = await userManager.FindByEmailAsync(userEmail);
+
+                var user = await userManager.FindByEmailAsync(email);
                 if (user == null)
                 {
-                    logger.LogWarning("User not found for email: {UserEmail} in POST /api/user/balance.", userEmail);
+                    logger.LogWarning("User not found for email: {UserEmail} in POST /api/user/balance.", email);
                     return TypedResults.Unauthorized();
                 }
 
-                logger.LogInformation("User {UserEmail} balance retrieved: {Balance}", userEmail, user.Balance);
+                logger.LogInformation("User {UserEmail} balance retrieved: {Balance}", email, user.Balance);
                 return TypedResults.Ok(user.Balance);
             })
             .RequireAuthorization();

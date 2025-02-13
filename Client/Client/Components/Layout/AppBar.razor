@@ -1,62 +1,96 @@
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+@using Client.Services.Interfaces
 @using WebComponents.Utility
+@inject IUserService UserService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<AuthorizeView>
-    <header>
-        <nav class="navbar">
-            <a href="#" class="nav-logo">
-                <img src="_content/WebComponents/images/logo.png" alt="logo">
-            </a>
+<header>
+    <nav class="navbar">
+        <a href="#" class="nav-logo">
+            <img src="_content/WebComponents/images/logo.png" alt="logo">
+            <span class="hidden-sm">Parrot wings</span>
+        </a>
 
-            <div class="user-data">
-                <p class="user-data__name">@context.User.Identity?.Name</p>
-                <p class="user-data__balance">500</p>
-            </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="d-flex col align-start">
+                    <p class="bold fz-1">@GetUserName(context.User)</p>
+                    <p class="bold" style="font-size: 0.8rem">Current balance: @Balance.ToString("F2")</p>
+                </div>
 
-            <ul class="@NavMenuClass">
-                <li class="nav-item">
-                    <a href="/createTransaction" class="nav-link">New transaction</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/history" class="nav-link">History</a>
-                </li>
-                <li class="@LogoutLinkClass">
-                    <a href="/logout" class="nav-link">Logout</a>
-                </li>
-            </ul>
+                <Spacer/>
 
-            <div class="@LogoutBtnClass">
-                <a href="/logout">
-                    <img src="logout.svg" alt="logout">
-                </a>
-            </div>
+                <ul class="@NavMenuClass">
+                    <li class="nav-item">
+                        <a href="/createTransaction" class="nav-link">New transaction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/history" class="nav-link">History</a>
+                    </li>
+                    <li class="@LogoutLinkClass">
+                        <a href="/logout" class="nav-link">Logout</a>
+                    </li>
+                </ul>
 
-            <div class="@HamburgerClass" @onclick="ToggleNavMenu">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-        </nav>
-    </header>
-</AuthorizeView>
+                <div class="@HamburgerClass" @onclick="ToggleNavMenu">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </nav>
+</header>
 
 @code {
-    private bool _collapseNavMenu;
+    private bool _collapseNavMenu = true;
 
-    private string? LogoutLinkClass => new CssBuilder("nav-item")
-        .AddClass("hidden", !_collapseNavMenu)
-        .Build();
+    private decimal Balance { get; set; }
 
-    private string? LogoutBtnClass => new CssBuilder("icon-logout")
+    private string LogoutLinkClass => new CssBuilder("nav-item")
         .AddClass("hidden", _collapseNavMenu)
         .Build();
 
-    private string? NavMenuClass => new CssBuilder("nav-menu")
+    private string NavMenuClass => new CssBuilder("nav-menu")
         .AddClass("open", !_collapseNavMenu)
         .Build();
 
-    private string? HamburgerClass => new CssBuilder("hamburger")
+    private string HamburgerClass => new CssBuilder("hamburger")
         .AddClass("active", !_collapseNavMenu)
         .Build();
 
     private void ToggleNavMenu() => _collapseNavMenu = !_collapseNavMenu;
+
+    private string GetUserName(ClaimsPrincipal user)
+    {
+        return user.Claims
+            .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.PreferredUsername)?.Value ?? string.Empty;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (state.User.Identity?.IsAuthenticated == true)
+        {
+            var balanceRequestResult = await UserService.GetUserBalanceAsync();
+            if (balanceRequestResult.Succeeded)
+            {
+                Balance = balanceRequestResult.Data;
+            }
+
+            StateHasChanged();
+        }
+
+        /*var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (state.User.Identity != null)
+        {
+            UserFullName = state.User.Claims
+                .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.PreferredUsername)?.Value ?? string.Empty;
+        }*/
+    }
+
 }

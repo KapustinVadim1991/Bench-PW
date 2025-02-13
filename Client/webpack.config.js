@@ -1,4 +1,3 @@
-const glob = require('glob');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -12,7 +11,11 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, './WebComponents/wwwroot/js'),
         library: '___MyScripts',
-        libraryTarget: 'var',
+        libraryTarget: 'var'
+    },
+    resolve: {
+        // This tells webpack to automatically resolve these extensions.
+        extensions: ['.ts', '.tsx', '.js']
     },
     module: {
         rules: [
@@ -29,7 +32,7 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
-            {
+/*            {
                 test: /\.m?js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: {
@@ -38,7 +41,7 @@ module.exports = {
                         presets: ['@babel/preset-env'],
                     },
                 },
-            },
+            },*/
         ],
     },
     plugins: [

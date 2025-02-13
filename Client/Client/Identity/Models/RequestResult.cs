@@ -3,7 +3,7 @@
 /// <summary>
 /// Response for login and registration.
 /// </summary>
-public class FormResult
+public class RequestResult
 {
     /// <summary>
     /// Gets or sets a value indicating whether the action was successful.
@@ -16,7 +16,7 @@ public class FormResult
     public string[] ErrorList { get; set; } = [];
 }
 
-public class FormResult<T>
+public class RequestResult<T>
 {
     private T? _data;
     public T? Data

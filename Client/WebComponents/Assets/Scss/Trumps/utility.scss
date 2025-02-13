@@ -35,6 +35,53 @@
   font-size: clamp(1rem, 8vw, 5rem);
 }
 
+.fz-clamp-md{
+  font-size: clamp(1rem, 6vw, 3rem);
+}
+
 .white-space-nowrap{
   white-space: nowrap;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.fz-1{ font-size: 1rem; }
+.fz-2{ font-size: 2rem; }
+.fz-3{ font-size: 3rem; }
+.fz-4{ font-size: 4rem; }
+
+.hidden{
+  display: none;
+}
+
+.align-center{
+  align-items: center;
+}
+
+.align-start{
+  align-items: flex-start;
+}
+
+.align-end{
+  align-items: flex-end;
+}
+
+@media screen and (max-width: 768px) {
+  .hidden-sm{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .hidden-md{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .hidden-lg{
+    display: none;
+  }
 }

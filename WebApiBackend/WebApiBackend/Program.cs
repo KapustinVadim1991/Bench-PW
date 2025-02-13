@@ -1,8 +1,13 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using WebApiBackend.Database;
 using WebApiBackend.Database.Domain;
 using WebApiBackend.Endpoints;
+using WebApiBackend.Service.Token;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -11,8 +16,9 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
-builder.Host.UseSerilog((context, services, configuration) => configuration
+builder.Host.UseSerilog((context, services, cfg) => cfg
     .ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services)
     .Enrich.FromLogContext()
@@ -25,9 +31,42 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<PwDbContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=parrotwings.db"));
 builder.Services.AddIdentityApiEndpoints<AppUser>()
-    .AddEntityFrameworkStores<PwDbContext>();
+    .AddEntityFrameworkStores<PwDbContext>()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddAuthorizationBuilder();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+var jwtSettings = configuration.GetSection("JwtSettings");
+var secretKey = jwtSettings["Secret"] ?? throw new ArgumentNullException("Secret key not found in the configuration file.");
+
+// Configure HTTP JSON options globally
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    // Disable the default camelCase naming policy.
+    options.SerializerOptions.PropertyNamingPolicy = null;
+});
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer           = true,
+            ValidateAudience         = true,
+            ValidateLifetime         = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer              = jwtSettings["Issuer"],
+            ValidAudience            = jwtSettings["Audience"],
+            IssuerSigningKey         = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            ClockSkew                = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
 // add a CORS policy for the client
 builder.Services.AddCors(
     options => options.AddPolicy(

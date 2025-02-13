@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Components\Layout\" />
       <Folder Include="wwwroot\css\" />
     </ItemGroup>
 

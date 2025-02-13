@@ -1,7 +1,3 @@
-export function getColor(): string {
-    return getColorAll();
-}
+import * as SelectLib from './selectBox';
 
-function getColorAll(): string {
-    return '#000001';
-}
+(window as any)._selectLib = SelectLib;

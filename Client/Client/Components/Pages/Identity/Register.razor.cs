@@ -9,7 +9,7 @@ public partial class Register
 {
     private bool _registerProcessing;
     private EditForm _form = null!;
-    private FormResult _formResult = new();
+    private RequestResult _requestResult = new();
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
     public async Task RegisterUserAsync()
@@ -23,11 +23,11 @@ public partial class Register
         StateHasChanged();
 
         await Task.Delay(1000); // to show loader
-        _formResult = await AuthService.RegisterAsync(Input.Name, Input.Email, Input.Password);
+        _requestResult = await AuthService.RegisterAsync(Input.Name, Input.Email, Input.Password);
 
         try
         {
-            if (_formResult.Succeeded)
+            if (_requestResult.Succeeded)
             {
                 Navigation.NavigateTo("/");
             }

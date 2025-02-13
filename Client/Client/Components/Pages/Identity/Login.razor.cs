@@ -9,7 +9,7 @@ namespace Client.Components.Pages.Identity;
 public partial class Login : AnonymousPage
 {
     private EditForm _form = null!;
-    private FormResult _formResult = new();
+    private RequestResult _requestResult = new();
     private bool _loginProcessing;
     private InputModel Input { get; set; } = new();
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
@@ -25,10 +25,10 @@ public partial class Login : AnonymousPage
         StateHasChanged();
 
         await Task.Delay(1000); // just to show the loader on the button
-        _formResult = await AuthService.LoginAsync(Input.Email, Input.Password);
+        _requestResult = await AuthService.LoginAsync(Input.Email, Input.Password);
 
         _loginProcessing = false;
-        if (_formResult.Succeeded)
+        if (_requestResult.Succeeded)
         {
             Navigation.NavigateTo(ReturnUrl ?? "/");
         }

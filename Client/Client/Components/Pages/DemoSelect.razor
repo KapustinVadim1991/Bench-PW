@@ -1,0 +1,47 @@
+﻿@using WebComponents.Components.SelectBox
+@inherits AnonymousPage
+@page "/demo"
+
+<h3>Демо компонента SelectBox</h3>
+
+<!-- Пример обычного селекта с локальным списком -->
+<SelectBox TItem="string" Items="@localItems" Placeholder="Выберите значение" OnItemSelected="OnItemSelectedHandler" />
+
+<!-- Пример автокомплита с server-side подгрузкой -->
+<SelectBox TItem="string"
+           Autocomplete="true"
+           Placeholder="Введите значение..."
+           OnServerSideSearch="ServerSideSearchHandler"
+           OnItemSelected="OnItemSelectedHandler" />
+
+@code {
+    // Пример локального списка
+    private List<string> localItems = new() { "Apple", "Banana", "Cherry", "Date", "Elderberry" };
+
+    private List<string> ServerDataItems = Enumerable.Range(1, 100).Select(i => $"Элемент {i}").ToList();
+
+    private void OnItemSelectedHandler(string selected)
+    {
+        Console.WriteLine($"Выбран элемент: {selected}");
+    }
+
+    private async Task<ServerSideResponse<string>> ServerSideSearchHandler(ServerSideRequest request)
+    {
+        await Task.Delay(1000);
+
+        var filteredItems = new List<string>(ServerDataItems);
+        if (!string.IsNullOrWhiteSpace(request.Filter))
+        {
+            filteredItems = ServerDataItems
+                .Where(x => x.Contains(request.Filter, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        var items = filteredItems.Skip(request.StartIndex).Take(request.Count);
+        return new ServerSideResponse<string>
+        {
+            TotalCount = filteredItems.Count,
+            Items = items
+        };
+    }
+}

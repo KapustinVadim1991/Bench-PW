@@ -38,7 +38,7 @@
                           Placeholder="Confirm the password"
                           For="() => Input.ConfirmPassword"/>
 
-            @foreach (var error in _formResult.ErrorList)
+            @foreach (var error in _requestResult.ErrorList)
             {
                 <div class="invalid_validation_message">@error</div>
             }

@@ -1,7 +1,7 @@
 @page "/logout"
 @using Client.Services.Interfaces
 @using Client.Identity
-@inject CookieAuthenticationStateProvider AuthenticationStateProvider
+@inject PwAuthenticationStateProvider AuthenticationStateProvider
 @inject IAuthService AuthService
 @inject NavigationManager NavigateManager
 
@@ -11,14 +11,12 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        if (await AuthenticationStateProvider.CheckAuthenticatedAsync())
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (state.User.Identity?.IsAuthenticated == true)
         {
-            var result = await AuthService.LogoutAsync();
-
-            if (result.Succeeded)
-            {
-                NavigateManager.NavigateTo("/login");
-            }
+            await AuthService.LogoutAsync();
         }
+
+        NavigateManager.NavigateTo("/login");
     }
 }

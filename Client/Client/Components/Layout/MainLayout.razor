@@ -1,24 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-<AuthorizeView>
-    <Authorized>
-        <div class="page">
-            <AppBar />
-            <main>
-                <article class="content">
-                    @Body
-                </article>
-            </main>
-        </div>
-    </Authorized>
-    <NotAuthorized>
-        <LayoutView Layout="typeof(EmptyLayout)"/>
-        <div class="page">
-            <main>
-                <article class="content">
-                    @Body
-                </article>
-            </main>
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
+<div class="page">
+    <AppBar />
+    <main>
+        <article class="content">
+            @Body
+        </article>
+    </main>
+</div>

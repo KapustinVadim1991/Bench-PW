@@ -1,0 +1,26 @@
+@using WebComponents.Utility
+<div class="@CardCombinedClass" style="@Style">
+    <div class="card-body">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+
+    private string CardCombinedClass => new CssBuilder("card")
+        .AddClass("w-100", FullWidth)
+        .AddClass(Class!, !string.IsNullOrWhiteSpace(Class))
+        .Build();
+
+    [Parameter]
+    public bool FullWidth { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public string? Style { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

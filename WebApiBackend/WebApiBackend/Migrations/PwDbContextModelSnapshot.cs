@@ -217,6 +217,43 @@ namespace WebApiBackend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("WebApiBackend.Database.Domain.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedByIp")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("Revoked")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RevokedByIp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("WebApiBackend.Database.Domain.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
@@ -295,6 +332,17 @@ namespace WebApiBackend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApiBackend.Database.Domain.RefreshToken", b =>
+                {
+                    b.HasOne("WebApiBackend.Database.Domain.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebApiBackend.Database.Domain.Transaction", b =>
