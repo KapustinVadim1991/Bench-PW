@@ -174,4 +174,20 @@ public class PwAuthenticationStateProvider : AuthenticationStateProvider
         var token = handler.ReadJwtToken(jwt);
         return token.Claims;
     }
+
+    public async Task<string> GetUserName()
+    {
+        var state = await GetAuthenticationStateAsync();
+
+        return state.User.Claims
+            .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.PreferredUsername)?.Value ?? string.Empty;
+    }
+
+    public async Task<string> GetUserEmail()
+    {
+        var state = await GetAuthenticationStateAsync();
+
+        return state.User.Claims
+            .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? string.Empty;
+    }
 }

@@ -1,15 +1,11 @@
 .select-box-container {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 1rem 0.8rem;
   cursor: pointer;
   user-select: none;
   background-color: #fff;
   width: 250px;
   border-radius: 8px;
-}
-
-.select-box-display {
-  min-height: 20px;
 }
 
 .placeholder {
@@ -26,9 +22,9 @@
 .dropdown-filter {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  font-size: 0.8rem;
-  padding: 8px;
+  font-size: 1rem;
+  padding: 12px 8px;
+  margin-bottom: 0.5rem;
 }
 
 .dropdown-items {
@@ -36,8 +32,10 @@
   overflow-y: auto;
 }
 
-.dropdown-item {
-  padding: 8px;
+.dropdown-item, .empty-list, .dropdownm-loading {
+  padding: 0.8rem 0.6rem;
+  color: $text-primary-color;
+  font-size: 0.8rem;
   cursor: pointer;
 }
 

@@ -33,6 +33,12 @@
       <None Include="wwwroot\logout.svg" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.WebUtilities">
+        <HintPath>..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\9.0.0\Microsoft.AspNetCore.WebUtilities.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
     <!-- Webpack Build -->
     <Target Name="BuildWebpack" BeforeTargets="Build">
         <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)" />

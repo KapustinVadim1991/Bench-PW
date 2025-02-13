@@ -1,7 +1,9 @@
 using System.Net.Http.Json;
 using Client.Helper;
 using Client.Identity.Models;
+using Client.Models.Users;
 using Client.Services.Interfaces;
+using Microsoft.AspNetCore.WebUtilities;
 using ParrotWings.Models.Dto.Users;
 using ParrotWings.Models.Models;
 
@@ -22,38 +24,50 @@ namespace Client.Services
         /// Calls the GET /api/users endpoint with optional filters.
         /// Note: Since GET requests with a body are not standard, an HttpRequestMessage with a GET method and a JSON body is used.
         /// </summary>
-        public async Task<RequestResult<IReadOnlyList<UserInfo>>> GetUsersAsync(UsersFilters? filters)
+        public async Task<RequestResult<GetUsersResponse>> GetUsersAsync(UsersFilters filters)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, "/api/users");
+                var queryParams = new Dictionary<string, string>();
 
-                if (filters != null)
-                {
-                    // Add the request body with filters (even though GET requests with a body are not standard practice)
-                    request.Content = JsonContent.Create(filters, UsersFiltersJsonContext.Default.UsersFilters);
-                }
+                if (!string.IsNullOrWhiteSpace(filters.Filter))
+                    queryParams.Add("filter", filters.Filter);
 
-                var response = await _httpClient.SendAsync(request);
+                if (!string.IsNullOrWhiteSpace(filters.SortBy))
+                    queryParams.Add("sortBy", filters.SortBy);
+
+                if (!string.IsNullOrWhiteSpace(filters.SortOrder))
+                    queryParams.Add("sortOrder", filters.SortOrder);
+
+                queryParams.Add("startIndex", filters.StartIndex.ToString());
+                queryParams.Add("count", filters.Count.ToString());
+
+                var url = QueryHelpers.AddQueryString("/api/users", queryParams!);
+
+                var response = await _httpClient.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
                     var result = await response.Content.ReadFromJsonAsync<GetUsersResponseDto>(
                         GetUsersResponseDtoJsonContext.Default.GetUsersResponseDto);
 
-                    return new RequestResult<IReadOnlyList<UserInfo>>
+                    return new RequestResult<GetUsersResponse>
                     {
                         Succeeded = true,
-                        Data = result?.Users.Select(x=> new UserInfo(x.Id, x.Email, x.FullName)).ToList()
+                        Data = new GetUsersResponse
+                        {
+                            TotalCount = result?.TotalCount ?? 0,
+                            Users = result?.Users.Select(x=> new UserInfo(x.Id, x.Email, x.FullName)).ToList() ?? []
+                        }
                     };
                 }
 
                 _logger.LogWarning("GetUsersAsync failed with status code: {StatusCode}", response.StatusCode);
-                return new RequestResult<IReadOnlyList<UserInfo>> { Succeeded = true, ErrorList = [ $"An error occurred during the users retrieval. Status is {response.StatusCode}"]};
+                return new RequestResult<GetUsersResponse> { Succeeded = true, ErrorList = [ $"An error occurred during the users retrieval. Status is {response.StatusCode}"]};
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Exception occurred in GetUsersAsync");
-                return new RequestResult<IReadOnlyList<UserInfo>> { Succeeded = true, ErrorList = [ "An unexpected error occurred during the users retrieval."] };
+                return new RequestResult<GetUsersResponse> { Succeeded = true, ErrorList = [ "An unexpected error occurred during the users retrieval."] };
             }
         }
 

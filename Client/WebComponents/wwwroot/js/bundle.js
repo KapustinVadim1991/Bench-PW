@@ -27,7 +27,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extr
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _selectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./selectBox */ \"./WebComponents/Assets/Scripts/selectBox.ts\");\n\nwindow._selectLib = _selectBox__WEBPACK_IMPORTED_MODULE_0__;\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scripts/Test.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _selectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./selectBox */ \"./WebComponents/Assets/Scripts/selectBox.ts\");\n\nwindow._selectLib = _selectBox__WEBPACK_IMPORTED_MODULE_0__;\nwindow.focusElement = function (elementId) {\n    var _a;\n    (_a = document.getElementById(elementId)) === null || _a === void 0 ? void 0 : _a.focus();\n};\n\n\n//# sourceURL=webpack://___MyScripts/./WebComponents/Assets/Scripts/Test.ts?");
 
 /***/ }),
 

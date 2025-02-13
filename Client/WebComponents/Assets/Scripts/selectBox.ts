@@ -82,7 +82,6 @@ export function addScrollDropdownEventListeners(
 
     // Store the callback in the map for later removal
     eventHandlersMap.set(dropdownItemsId, callback);
-
     dropdownItems.addEventListener('scroll', callback);
 }
 

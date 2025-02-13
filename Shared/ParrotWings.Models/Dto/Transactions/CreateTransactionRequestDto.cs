@@ -7,9 +7,6 @@ namespace ParrotWings.Models.Dto.Transactions;
 /// </summary>
 public class CreateTransactionRequestDto
 {
-    [Required, EmailAddress] public string RecipientEmail { get; set; } = null!;
-
-    [Required]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
+    public string RecipientId { get; set; } = null!;
     public decimal Amount { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace Client.Identity.Models;
+﻿namespace Client.Models.Users;
 
 /// <summary>
 /// User info from identity endpoint to establish claims.

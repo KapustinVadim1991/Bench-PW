@@ -17,6 +17,8 @@ public class PwDbContext : IdentityDbContext<AppUser>
     {
         base.OnModelCreating(builder);
 
+        builder.UseCollation("NOCASE");
+
         builder.Entity<Transaction>(entity =>
         {
             entity.HasOne(t => t.Sender)

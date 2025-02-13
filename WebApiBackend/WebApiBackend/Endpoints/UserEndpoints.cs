@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiBackend.Database.Domain;
 using ParrotWings.Models.Dto.Users;
-using ParrotWings.Models.Models;
 
 namespace WebApiBackend.Endpoints
 {
@@ -17,68 +16,63 @@ namespace WebApiBackend.Endpoints
         public static IEndpointRouteBuilder MapUserEndpoints(this IEndpointRouteBuilder routes)
         {
             // GET /api/users – retrieves a list of users with pagination, filtering by email and/or full name, and sorting.
-            routes.MapGet(
-                "/api/users",
-                async Task<Results<Ok<GetUsersResponseDto>, UnauthorizedHttpResult>>
-                (
+            routes.MapGet("/api/users", async Task<Results<Ok<GetUsersResponseDto>, UnauthorizedHttpResult>> (
                     HttpContext http,
                     UserManager<AppUser> userManager,
                     ILogger<Endpoints> logger,
-                    [FromBody] UsersFilters? filters
-                ) =>
-            {
-                filters ??= new UsersFilters();
-                logger.LogInformation("GET /api/users called by user: {User}", http.User.Identity?.Name);
-
-                // Only authenticated users have access.
-                if (!(http.User.Identity?.IsAuthenticated ?? false))
+                    [FromQuery] string? filter,
+                    [FromQuery] int startIndex,
+                    [FromQuery] int count,
+                    [FromQuery] string sortBy = "name",
+                    [FromQuery] string sortOrder = "asc"
+                    ) =>
                 {
-                    logger.LogWarning("Unauthorized access attempt in GET /api/users.");
-                    return TypedResults.Unauthorized();
-                }
+                    logger.LogInformation("GET /api/users called by user: {User}", http.User.Identity?.Name);
 
-                var usersQuery = userManager.Users.AsQueryable();
+                    if (!(http.User.Identity?.IsAuthenticated ?? false))
+                    {
+                        logger.LogWarning("Unauthorized access attempt in GET /api/users.");
+                        return TypedResults.Unauthorized();
+                    }
 
-                if (!string.IsNullOrEmpty(filters.Filter))
-                {
-                    logger.LogInformation("Applying filter: {filter}", filters.Filter);
-                    usersQuery = usersQuery
-                        .Where(u =>
-                            u.Email!.Contains(filters.Filter) ||
-                            u.FullName.Contains(filters.Filter)
-                        );
-                }
+                    var usersQuery = userManager.Users.AsQueryable();
 
-                // Sorting (by email or full name)
-                logger.LogInformation("Sorting users by {SortBy} in {SortOrder} order", filters.SortBy, filters.SortOrder);
-                usersQuery = filters.SortBy?.ToLower() switch
-                {
-                    "fullname" => filters.SortOrder?.ToLower() == "asc"
-                                    ? usersQuery.OrderBy(u => u.FullName)
-                                    : usersQuery.OrderByDescending(u => u.FullName),
-                    _ => filters.SortOrder?.ToLower() == "asc"
-                                    ? usersQuery.OrderBy(u => u.Email)
-                                    : usersQuery.OrderByDescending(u => u.Email)
-                };
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        logger.LogInformation("Applying filter: {filter}", filter);
+                        usersQuery = usersQuery.Where(u =>
+                            u.Email!.Contains(filter) ||
+                            u.FullName.Contains(filter));
+                    }
 
-                // Apply pagination.
-                logger.LogInformation("Applying pagination: startIndex = {StartIndex}, count = {Count}", filters.StartIndex, filters.Count);
-                var users = await usersQuery.Skip(filters.StartIndex).Take(filters.Count).ToListAsync();
-                logger.LogInformation("Found {Count} users", users.Count);
+                    // Sorting
+                    logger.LogInformation("Sorting users by {SortBy} in {SortOrder} order", sortBy, sortOrder);
+                    usersQuery = sortBy.ToLower() switch
+                    {
+                        "fullname" => sortOrder.ToLower() == "asc"
+                            ? usersQuery.OrderBy(u => u.FullName)
+                            : usersQuery.OrderByDescending(u => u.FullName),
+                        _ => sortOrder.ToLower() == "asc"
+                            ? usersQuery.OrderBy(u => u.Email)
+                            : usersQuery.OrderByDescending(u => u.Email)
+                    };
 
-                // Return simplified user data.
-                var result = users.Select(u => new UserDto
-                {
-                    Id = u.Id,
-                    Email = u.Email!,
-                    FullName = u.FullName
-                });
-                return TypedResults.Ok(new GetUsersResponseDto
-                {
-                    Users = result,
-                });
-            })
-            .RequireAuthorization();
+                    // Pagination
+                    logger.LogInformation("Applying pagination: startIndex = {StartIndex}, count = {Count}", startIndex, count);
+                    var totalCount = usersQuery.Count();
+                    var users = await usersQuery.Skip(startIndex).Take(count).ToListAsync();
+                    logger.LogInformation("Found {Count} users", users.Count);
+
+                    var result = users.Select(u => new UserDto
+                    {
+                        Id = u.Id,
+                        Email = u.Email!,
+                        FullName = u.FullName
+                    });
+
+                    return TypedResults.Ok(new GetUsersResponseDto { Users = result, TotalCount = totalCount });
+                })
+                .RequireAuthorization();
 
             // POST /api/user/balance – get user balance.
             routes.MapGet("/api/user/balance", async Task<Results<Ok<decimal>, UnauthorizedHttpResult>> (
@@ -86,9 +80,10 @@ namespace WebApiBackend.Endpoints
                 UserManager<AppUser> userManager,
                 ILogger<Endpoints> logger) =>
             {
-                logger.LogInformation("POST /api/user/balance called by user: {User}", http.User.Identity?.Name);
 
                 var email = http.User.FindFirst(ClaimTypes.Email)?.Value;
+                logger.LogInformation("POST /api/user/balance called by user: {User}", email);
+
                 if (http.User.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(email))
                 {
                     logger.LogWarning("User email is null or empty in POST /api/user/balance.");

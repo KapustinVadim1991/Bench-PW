@@ -23,7 +23,7 @@
 
                 <ul class="@NavMenuClass">
                     <li class="nav-item">
-                        <a href="/createTransaction" class="nav-link">New transaction</a>
+                        <a href="/transfer" class="nav-link">New transaction</a>
                     </li>
                     <li class="nav-item">
                         <a href="/history" class="nav-link">History</a>
@@ -84,13 +84,6 @@
 
             StateHasChanged();
         }
-
-        /*var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (state.User.Identity != null)
-        {
-            UserFullName = state.User.Claims
-                .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.PreferredUsername)?.Value ?? string.Empty;
-        }*/
     }
 
 }

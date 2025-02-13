@@ -1,5 +1,12 @@
-﻿@inherits AuthorizedPage
+﻿@using System.ComponentModel.DataAnnotations
+@using Client.Identity
+@using Client.Models.Users
+@using Client.Services.Interfaces
+@using ParrotWings.Models.Models
+@inherits AuthorizedPage
 @page "/transfer"
+@inject IUserService UserService
+@inject PwAuthenticationStateProvider AuthenticationStateProvider
 
 <div class="container gap-3 flex-center col">
     <div class="text-center">
@@ -8,10 +15,88 @@
 
     <hr />
 
-    <div class="text-center gap-3 flex-center col">
-        <Card FullWidth>
-            <h3 class="card-title">Select recipient</h3>
-            <SelectBox Autocomplete Placeholder="John Smith" ></SelectBox>
+    <EditForm @ref="_form" Model="this" OnValidSubmit="SendTransfer" class="w-100 align-center">
+        <Card Class="w-50 w-sm-100" CardBodyClass="d-flex col gap-3">
+
+            <div class="d-flex col">
+                <label class="form-item__label">Select recipient</label>
+                <SelectBox TItem="UserInfo" Autocomplete
+                           Class="w-100"
+                           OnServerSideSearch="LoadUsers"
+                           Placeholder="John Smith"
+                           @bind-Value="SelectedUser">
+                    <ItemTemplate Context="ctx">
+                        @ctx.Name @ctx.Email
+                    </ItemTemplate>
+                </SelectBox>
+                <ValidationMessage For="() => SelectedUser" class="invalid_validation_message pt-025" />
+            </div>
+
+            <LabeledInput @bind-Value="Amount" For="() => Amount" Placeholder="10.00 $" Label="Amount" Requred InputType="number"/>
+
+            <Button IsLoading="_sendInProcessing"
+                    Type="submit"
+                    Color="Color.Primary"
+                    Text="Send"
+                    Class="mt-1 w-100"/>
         </Card>
-    </div>
+    </EditForm>
 </div>
+
+@code
+{
+    private EditForm _form = null!;
+    private bool _sendInProcessing;
+
+    [Required]
+    [Display(Name = "Recipient")]
+    private UserInfo? SelectedUser { get; set; }
+
+    [Required]
+    [Display(Name = "Amount")]
+    [Range(0.1, double.MaxValue, ErrorMessage = "Amount has to be more than 0.1$")]
+    private string? Amount { get; set; }
+
+    private string UserEmail { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        UserEmail = await AuthenticationStateProvider.GetUserEmail();
+    }
+
+    private async Task<ServerSideResponse<UserInfo>> LoadUsers(ServerSideRequest request)
+    {
+        var result = await UserService.GetUsersAsync(new UsersFilters()
+        {
+            StartIndex = request.StartIndex,
+            Count = request.Count,
+            Filter = request.Filter
+        });
+
+        if (!result.Succeeded)
+        {
+            // todo show an error
+        }
+
+        return new ServerSideResponse<UserInfo>
+        {
+            Items = result.Data?.Users.Where(x=>x.Email.Equals(UserEmail, StringComparison.OrdinalIgnoreCase)) ?? [],
+            TotalCount = result.Data?.TotalCount ?? 0
+        };
+    }
+
+    private async Task SendTransfer()
+    {
+        if (!_form.EditContext!.Validate())
+        {
+            return;
+        }
+
+        _sendInProcessing = true;
+        StateHasChanged();
+
+        await Task.Delay(1000);
+        _sendInProcessing = false;
+    }
+}

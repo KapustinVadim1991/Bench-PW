@@ -1,6 +1,6 @@
 @using WebComponents.Utility
 <div class="@CardCombinedClass" style="@Style">
-    <div class="card-body">
+    <div class="@CardBodyClass">
         @ChildContent
     </div>
 </div>
@@ -17,6 +17,9 @@
 
     [Parameter]
     public string? Class { get; set; }
+
+    [Parameter]
+    public string? CardBodyClass { get; set; }
 
     [Parameter]
     public string? Style { get; set; }
